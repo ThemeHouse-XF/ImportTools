@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<addon addon_id="ThemeHouse_ImportTools" title="[⌂] Import Tools" version_string="1.0.1" version_id="1447261019" url="http://xf.themehouse.io/" install_callback_class="ThemeHouse_Install" install_callback_method="install" uninstall_callback_class="ThemeHouse_Install" uninstall_callback_method="uninstall">
+  <admin_navigation>
+    <navigation navigation_id="retrieveArchivedLog" parent_navigation_id="import" display_order="10" link="import/retrieve-log" admin_permission_id="import" debug_only="0" hide_no_children="0"/>
+  </admin_navigation>
+  <admin_permissions/>
+  <admin_style_properties/>
+  <admin_templates>
+    <template title="th_retrieve_archived_import_log_importtools"><![CDATA[<xen:title>{xen:phrase th_retrieve_archived_import_log_importtools}</xen:title>
+
+<xen:form action="{xen:adminlink import/retrieve-log}">
+	<h2 class="sectionHeader">{xen:phrase th_retrieve_archived_import_log_importtools}</h2>
+
+	<xen:textboxunit name="table" label="{xen:phrase th_retrieve_from_table_importtools}:" value="archived_import_log" />
+
+	<xen:submitunit save="{xen:phrase th_retrieve_archived_import_log_importtools}" />
+</xen:form>]]></template>
+    <template title="th_skip_step_button_importtools"><![CDATA[<a href="{xen:adminlink 'import/skip-step', '', 'step={$step}'}">{xen:phrase th_skip_step_importtools}</a>]]></template>
+    <template title="th_undo_step_button_importtools"><![CDATA[<a href="{xen:adminlink 'import/undo-step', '', 'step={$step}'}">{xen:phrase th_undo_step_importtools}</a>]]></template>
+  </admin_templates>
+  <admin_template_modifications>
+    <modification template="import_steps" modification_key="th_importStepsSkip_importTools" description="Adds skip links to import steps." execution_order="10" enabled="1" action="preg_replace">
+      <find><![CDATA[#<xen:elseif is="{\$info.runnable}" />\s*<input[^>]*>#]]></find>
+      <replace><![CDATA[${0}
+<xen:if is="{$step} != 'forums' || !{$isRetainKeys} || {$xenOptions.th_importTools_canSkipRetainKeysForumsStep}">
+<xen:include template="th_skip_step_button_importtools" />
+</xen:if>]]></replace>
+    </modification>
+    <modification template="import_steps" modification_key="th_importStepsUndo_importTools" description="Adds undo links to import steps." execution_order="10" enabled="1" action="preg_replace">
+      <find><![CDATA[#<xen:if is="{\$info.hasRun}">\s*<input[^>]*>#]]></find>
+      <replace><![CDATA[${0}
+<xen:include template="th_undo_step_button_importtools" />]]></replace>
+    </modification>
+  </admin_template_modifications>
+  <code_events/>
+  <code_event_listeners>
+    <listener event_id="controller_pre_dispatch" execute_order="10" callback_class="ThemeHouse_Listener_ControllerPreDispatch" callback_method="controllerPreDispatch" active="1" hint="" description=""/>
+    <listener event_id="file_health_check" execute_order="10" callback_class="ThemeHouse_ImportTools_Listener_FileHealthCheck" callback_method="fileHealthCheck" active="1" hint="" description=""/>
+    <listener event_id="init_dependencies" execute_order="10" callback_class="ThemeHouse_Listener_InitDependencies" callback_method="initDependencies" active="1" hint="" description=""/>
+    <listener event_id="load_class" execute_order="10" callback_class="ThemeHouse_ImportTools_Listener_LoadClass" callback_method="loadClassController" active="0" hint="XenForo_ControllerAdmin_Import" description="XenForo_ControllerAdmin_Import (For XenForo 1.2 and above)" compatibility_switch="1"/>
+    <listener event_id="load_class" execute_order="10" callback_class="ThemeHouse_ImportTools_Listener_LoadClass" callback_method="loadClassModel" active="0" hint="XenForo_Model_Import" description="XenForo_Model_Import (For XenForo 1.2 and above)" compatibility_switch="1"/>
+    <listener event_id="load_class_controller" execute_order="10" callback_class="ThemeHouse_ImportTools_Listener_LoadClass" callback_method="loadClassController" active="1" hint="" description="(For XenForo 1.1 and below)" compatibility_switch="1"/>
+    <listener event_id="load_class_model" execute_order="10" callback_class="ThemeHouse_ImportTools_Listener_LoadClass" callback_method="loadClassModel" active="1" hint="" description="(For XenForo 1.1 and below)" compatibility_switch="1"/>
+    <listener event_id="template_post_render" execute_order="10" callback_class="ThemeHouse_ImportTools_Listener_TemplatePostRender" callback_method="templatePostRender" active="1" hint="" description="(For XenForo 1.1 and below)" compatibility_switch="1"/>
+  </code_event_listeners>
+  <cron/>
+  <email_templates/>
+  <email_template_modifications/>
+  <optiongroups>
+    <group group_id="th_importTools" display_order="2000" debug_only="0"/>
+    <option option_id="th_importTools_canSkipRetainKeysForumsStep" edit_format="onoff" data_type="boolean" can_backup="1">
+      <default_value>0</default_value>
+      <edit_format_params/>
+      <sub_options/>
+      <relation group_id="th_importTools" display_order="1"/>
+    </option>
+  </optiongroups>
+  <permissions>
+    <permission_groups/>
+    <permissions/>
+    <interface_groups/>
+  </permissions>
+  <phrases>
+    <phrase title="admin_navigation_retrieveArchivedLog" version_id="1352487633" version_string="1.0.0"><![CDATA[Retrieve Archived Log]]></phrase>
+    <phrase title="option_group_th_importTools" version_id="1375261503" version_string="1.0.0"><![CDATA[Import Tools by ThemeHouse]]></phrase>
+    <phrase title="option_group_th_importTools_description" version_id="1375261503" version_string="1.0.0"><![CDATA[Options for the Import Tools by ThemeHouse add-on.]]></phrase>
+    <phrase title="option_th_importTools_canSkipRetainKeysForumsStep" version_id="1375261503" version_string="1.0.0"><![CDATA[Can skip Import Forums step if 'Retain Imported Content Ids' is selected?]]></phrase>
+    <phrase title="option_th_importTools_canSkipRetainKeysForumsStep_explain" version_id="1375261503" version_string="1.0.0"><![CDATA[Enabling this option will allow you to skip the 'Import Forums' step on an import if you have selected the 'Retain Imported Content Ids' configuration option. This is disabled by default as XenForo deletes the nodes with IDs 1 and 2 whenever a new import is started with these options, so you will usually need to re-import these nodes.]]></phrase>
+    <phrase title="th_error_unable_to_retrieve_table_due_to_error_importtools" version_id="1352487633" version_string="1.0.0"><![CDATA[It is not possible to retrieve the table '{table}' due to the following error: {error}]]></phrase>
+    <phrase title="th_retrieve_archived_import_log_importtools" version_id="1352473350" version_string="1.0.0"><![CDATA[Retrieve Archived Import Log]]></phrase>
+    <phrase title="th_retrieve_from_table_importtools" version_id="1352473350" version_string="1.0.0"><![CDATA[Retrieve from table]]></phrase>
+    <phrase title="th_skip_step_importtools" version_id="1352473350" version_string="1.0.0"><![CDATA[Skip step]]></phrase>
+    <phrase title="th_undo_step_importtools" version_id="1352473350" version_string="1.0.0"><![CDATA[Undo step]]></phrase>
+  </phrases>
+  <route_prefixes/>
+  <style_properties/>
+  <templates/>
+  <public_template_modifications>
+    <modification template="footer" modification_key="th_copyrightNotice_importTools" description="Copyright notice for [⌂] Import Tools" execution_order="1" enabled="1" action="callback">
+      <find><![CDATA[/{xen:phrase (?:xenforo|extra)_copyright}/]]></find>
+      <replace><![CDATA[ThemeHouse_Listener_InitDependencies::copyrightNotice]]></replace>
+    </modification>
+  </public_template_modifications>
+  <bb_code_media_sites/>
+  <bb_codes/>
+</addon>
